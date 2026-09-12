@@ -5,7 +5,7 @@ One file, `site.config.ts`, holds everything client-specific. Swap it and you ha
 
 - Next.js (App Router) + TypeScript + Tailwind CSS, exported as plain static files
 - No backend, database, forms, or tracking
-- Mobile-first, WCAG AA contrast, 44px+ tap targets, system fonts
+- Mobile-first, WCAG AA contrast, 44px+ tap targets, one self-hosted font
 - SEO: title, description, Open Graph, sitemap, robots.txt, and LocalBusiness JSON-LD, all from the config
 - Deploys to Cloudflare Pages for free
 
@@ -85,7 +85,8 @@ Collect these from the client first: exact business name, phone, WhatsApp number
 | Field | What to enter |
 | --- | --- |
 | `name` | Business name exactly as on their signboard / Google listing |
-| `tagline` | One short line shown under the name |
+| `nameSub` | Optional. Small spaced-out line under the name in the header, e.g. "Physiotherapy" |
+| `tagline` | One short line under the hero headline |
 | `description` | 1–2 sentences for Google results and WhatsApp link previews. Mention the area. |
 | `siteUrl` | Final URL, no trailing slash. Until a custom domain is set up, use the exact `*.pages.dev` address Cloudflare assigns (it may add a suffix like `-6ws`). |
 | `businessType` | `Dentist`, `MedicalClinic`, `Physician`, `Optician`, `Pharmacy`, `EducationalOrganization`, or `LocalBusiness` |
@@ -97,10 +98,18 @@ Collect these from the client first: exact business name, phone, WhatsApp number
 | `mapsEmbedUrl` | See below |
 | `hours` | One entry per shift, 24h times. Days not listed show as "Closed". |
 | `servicesHeading` | Optional. Defaults to "Services" (e.g. "Courses", "Treatments") |
-| `services` | Plain names only |
+| `servicesSubheading` | Optional. Short line beside the services heading |
+| `services` | Plain names only. Each card's icon is picked automatically from the words. |
 | `reviews` | Real reviews only, with permission. `[]` hides the section. |
-| `images` | Paths to files in `/public` |
+| `images` | Paths to files in `/public`. `images.hero` sits behind the hero headline under a dark gradient. |
+| `logo` | Optional. Square logo in `/public`; without it a simple round mark is shown |
+| `notice` | Optional. `{ text, aside }` for the thin strip above the header; `aside` shows on wider screens |
+| `hero` | Optional. `{ eyebrow, headline, highlights }`: small line above the headline, headline lines (the last one uses the accent colour), and up to 3 short highlights with auto-picked icons |
+| `feature` | Optional. `{ title, text, image, imageAlt }` for a dark card with a photo |
+| `video` | Optional. `{ src, poster, title, caption }` for a short local `.mp4` that plays muted while on screen |
+| `footerTagline` | Optional. Short line in the footer |
 | `colors.primary` | Brand hex colour. Contrast is fixed automatically. |
+| `colors.accent` | Optional. Highlight colour for text on dark sections; derived from `primary` if omitted and lightened if needed for contrast |
 
 **Getting `mapsEmbedUrl`:** open Google Maps → find the business → **Share** → **Embed a map** → **Copy HTML**. Paste only the URL inside `src="..."`. It starts with `https://www.google.com/maps/embed?pb=`.
 
@@ -216,10 +225,10 @@ app/
   page.tsx            ← puts the sections together
   globals.css         ← Tailwind theme tokens, buttons, focus styles
   sitemap.ts, robots.ts, icon.svg
-components/           ← Header, Hero, Services, Reviews, LocationHours, Footer, WhatsAppButton, JsonLd
+components/           ← DemoBanner, NoticeBar, Header (+ MobileMenu, BrandMark), Hero, Services, Feature (+ ClinicVideo), Reviews, LocationHours, Footer, WhatsAppButton, JsonLd
 public/               ← images, og-image.png, _headers
 ```
 
-**Branding:** `colors.primary` is turned into five CSS variables (`--brand`, `--brand-contrast`, `--brand-hover`, `--brand-tint`, `--brand-ink`) set on `<html>`. Tailwind exposes them as `bg-brand`, `text-brand-ink`, etc. Button text switches between white and dark automatically, and brand-coloured text is darkened if needed, so any colour stays WCAG AA compliant.
+**Branding:** `colors.primary` (and optional `colors.accent`) are turned into CSS variables (`--brand`, `--brand-contrast`, `--brand-hover`, `--brand-tint`, `--brand-ink`, `--brand-dark`, `--brand-darker`, `--accent`) set on `<html>`. Tailwind exposes them as `bg-brand`, `text-brand-ink`, `from-brand-dark`, `text-accent`, etc. Button text switches between white and dark automatically, brand-coloured text is darkened, dark sections are deep enough for white text, and the accent is lightened against them, so any colour stays WCAG AA compliant.
 
-**No JavaScript needed for the page itself:** navigation is plain anchor links, the mobile nav scrolls sideways instead of using a menu, and every component is a server component rendered at build time.
+**Very little JavaScript:** everything is rendered to static HTML at build time. Only two small components run in the browser: the mobile menu, and the video, which plays only while it's on screen and never auto-plays for visitors who prefer reduced motion. The font (Plus Jakarta Sans) is downloaded at build time and served from the site itself, so visitors' browsers never contact Google Fonts.

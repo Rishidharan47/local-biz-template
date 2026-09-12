@@ -1,7 +1,15 @@
 import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import type { CSSProperties } from "react";
 import { site, theme } from "@/lib/config";
 import "./globals.css";
+
+// Self-hosted at build time: visitors' browsers never request Google Fonts.
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
 
 const title = `${site.name} | ${site.address.locality}${site.demo ? " (preview)" : ""}`;
 
@@ -35,7 +43,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: theme.brand,
+  themeColor: theme.brandDark,
 };
 
 const brandVars = {
@@ -44,11 +52,14 @@ const brandVars = {
   "--brand-hover": theme.brandHover,
   "--brand-tint": theme.brandTint,
   "--brand-ink": theme.brandInk,
+  "--brand-dark": theme.brandDark,
+  "--brand-darker": theme.brandDarker,
+  "--accent": theme.accent,
 } as CSSProperties;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-IN" style={brandVars}>
+    <html lang="en-IN" className={jakarta.variable} style={brandVars}>
       <body>{children}</body>
     </html>
   );

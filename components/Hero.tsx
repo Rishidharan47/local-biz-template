@@ -1,48 +1,78 @@
 import Image from "next/image";
 import { links, site } from "@/lib/config";
-import { ChatIcon, MapPinIcon, PhoneIcon } from "./icons";
+import { PhoneIcon, topicIcon, WhatsAppIcon } from "./icons";
 
 export default function Hero() {
+  const { eyebrow, headline, highlights } = site.hero;
+  const accentLine = headline.length > 1 ? headline[headline.length - 1] : null;
+  const leadLines = accentLine ? headline.slice(0, -1) : headline;
+
   return (
-    <section id="top" aria-labelledby="hero-title" className="bg-brand-tint">
-      <div className="wrap grid items-center gap-8 py-10 sm:py-14 md:grid-cols-2 md:gap-12 md:py-20">
-        <div>
+    <section
+      id="top"
+      aria-labelledby="hero-title"
+      className="relative isolate overflow-hidden bg-brand-darker text-white [--focus-ring:#ffffff]"
+    >
+      <Image
+        src={site.images.hero}
+        alt={site.images.heroAlt}
+        fill
+        loading="eager"
+        fetchPriority="high"
+        sizes="100vw"
+        className="-z-20 object-cover object-[65%_center] md:object-right"
+      />
+      {/* Solid brand colour behind the text, fading out to reveal the photo */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-linear-to-r from-brand-darker from-35% via-brand-dark/90 via-65% to-brand-dark/45 md:from-30% md:via-brand-dark/80 md:via-55% md:to-transparent"
+      />
+
+      <div className="wrap py-12 sm:py-16 md:py-24 [text-shadow:0_1px_14px_rgb(0_0_0/0.3)]">
+        <div className="max-w-[16.5rem] sm:max-w-md md:max-w-xl">
+          {eyebrow && <p className="eyebrow">{eyebrow}</p>}
           <h1
             id="hero-title"
-            className="text-3xl leading-tight font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl"
+            className="mt-3 text-[2.4rem] leading-[1.05] font-extrabold tracking-tight sm:text-5xl lg:text-6xl"
           >
-            {site.name}
+            {leadLines.map((line, i) => (
+              <span key={i} className="block">
+                {line}
+              </span>
+            ))}
+            {accentLine && <span className="block text-accent">{accentLine}</span>}
           </h1>
-          <p className="mt-4 max-w-prose text-lg text-gray-700">{site.tagline}</p>
+          <p className="mt-4 text-base sm:text-lg">{site.tagline}</p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a href={links.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-              <ChatIcon />
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row [text-shadow:none]">
+            <a href={links.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-wa">
+              <WhatsAppIcon className="size-6" />
               Book on WhatsApp
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
-            <a href={links.tel} className="btn btn-secondary">
+            <a href={links.tel} className="btn btn-outline-light">
               <PhoneIcon />
-              Call {site.phone}
+              Call now
             </a>
           </div>
-
-          <p className="mt-6 flex items-start gap-2 text-sm text-gray-700">
-            <MapPinIcon className="mt-0.5 size-4 text-brand-ink" />
-            {site.address.locality}, {site.address.region}
-          </p>
         </div>
 
-        <Image
-          src={site.images.hero}
-          alt={site.images.heroAlt}
-          width={1200}
-          height={900}
-          loading="eager"
-          fetchPriority="high"
-          sizes="(min-width: 768px) 50vw, 100vw"
-          className="aspect-[4/3] w-full rounded-2xl object-cover"
-        />
+        {highlights.length > 0 && (
+          <ul className="mt-10 grid max-w-xl grid-cols-3 divide-x divide-white/25">
+            {highlights.map((highlight) => {
+              const Icon = topicIcon(highlight);
+              return (
+                <li
+                  key={highlight}
+                  className="flex flex-col items-center gap-2 px-2 text-center text-sm font-semibold sm:flex-row sm:gap-3 sm:text-left"
+                >
+                  <Icon className="size-8 text-accent" />
+                  {highlight}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </section>
   );
