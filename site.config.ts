@@ -11,7 +11,7 @@ const siteConfig: SiteConfig = {
   tagline: "[Placeholder tagline] Replace with the clinic's own one-line intro.",
   description:
     "[Placeholder description] One or two sentences for Google results and link previews. Mention the area served.",
-  siteUrl: "https://demo-smile-dental.pages.dev", // no trailing slash; used for OG, sitemap, JSON-LD
+  siteUrl: "https://local-biz-template.pages.dev", // no trailing slash; used for OG, sitemap, JSON-LD
   businessType: "Dentist", // schema.org type: "Dentist" | "MedicalClinic" | "Physician" | "Optician" | "Pharmacy" | "EducationalOrganization" | "LocalBusiness"
 
   // ── Contact ─────────────────────────────────────────────────
