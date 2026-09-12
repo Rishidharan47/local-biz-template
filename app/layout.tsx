@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import { site, theme } from "@/lib/config";
 import "./globals.css";
 
-const title = `${site.name} | ${site.address.locality}`;
+const title = `${site.name} | ${site.address.locality}${site.demo ? " (preview)" : ""}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.siteUrl),
@@ -28,6 +28,10 @@ export const metadata: Metadata = {
   },
   // Phone numbers are already real tel: links; stop iOS adding its own.
   formatDetection: { telephone: false },
+  // Pitch previews for prospective clients must never appear in search results.
+  robots: site.demo
+    ? { index: false, follow: false, googleBot: { index: false, follow: false } }
+    : undefined,
 };
 
 export const viewport: Viewport = {

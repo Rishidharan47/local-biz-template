@@ -78,6 +78,7 @@ function validate(config: SiteConfig): ResolvedSiteConfig {
   return {
     ...config,
     siteUrl: config.siteUrl.replace(/\/+$/, ""),
+    demo: config.demo === true,
     whatsappMessage: (config.whatsappMessage?.trim() || DEFAULT_WHATSAPP_MESSAGE).replaceAll("{name}", config.name),
     servicesHeading: config.servicesHeading?.trim() || DEFAULT_SERVICES_HEADING,
   };

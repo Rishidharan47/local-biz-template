@@ -46,6 +46,26 @@ Copy-Item configs\coaching.config.ts site.config.ts
 
 ---
 
+## Pitch previews (demo mode)
+
+To show a prospective client what their site could look like before they've agreed to anything, set `demo: true` in `site.config.ts`. The build then:
+
+- Shows a banner at the top: "Preview: a sample website prepared for {name}. This is not their official site."
+- Adds a `noindex, nofollow` robots tag so search engines don't list the page. `robots.txt` still allows crawling, because a crawler that's blocked never sees the noindex tag.
+- Leaves `sitemap.xml` empty and drops the LocalBusiness JSON-LD.
+- Adds "(preview)" to the page title and link previews.
+- Prints a reminder in the build output.
+
+Rules for previews:
+
+- Use only facts from the business's public listing (name, phone, address, hours, services). Don't copy their Google reviews onto the page until they agree.
+- Deploy each preview as its own Cloudflare Pages project and share the link only with that business.
+- Delete the project if they say no.
+
+When they sign, set `demo: false`, replace the placeholder images and text, and redeploy.
+
+---
+
 ## New client site in under 10 minutes
 
 ### 1. Copy the template (1 min)
@@ -69,6 +89,7 @@ Collect these from the client first: exact business name, phone, WhatsApp number
 | `description` | 1–2 sentences for Google results and WhatsApp link previews. Mention the area. |
 | `siteUrl` | Final URL, no trailing slash. Until a custom domain is set up, use the exact `*.pages.dev` address Cloudflare assigns (it may add a suffix like `-6ws`). |
 | `businessType` | `Dentist`, `MedicalClinic`, `Physician`, `Optician`, `Pharmacy`, `EducationalOrganization`, or `LocalBusiness` |
+| `demo` | `true` for a pitch preview (see [Pitch previews](#pitch-previews-demo-mode)), `false` for the live site |
 | `phone` | As it should be displayed, e.g. `+91 98xxx xxxxx` |
 | `whatsapp` | Digits only: `91` + 10-digit mobile, e.g. `9198xxxxxxxx` |
 | `whatsappMessage` | Optional. Pre-filled message; `{name}` becomes the business name. |
@@ -101,6 +122,7 @@ npm run build
 
 - If a config value is wrong (bad WhatsApp format, external image path, invalid hours), the build fails with a message naming the field.
 - The build lists every field that still contains placeholder text. That list must be empty before going live.
+- If `demo` is `true`, the build says so. Set it to `false` before going live, or the site stays hidden from Google.
 - Check the result locally at a phone-sized width (360px) in your browser's device toolbar:
 
 ```bash
