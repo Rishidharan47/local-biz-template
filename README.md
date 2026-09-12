@@ -67,7 +67,7 @@ Collect these from the client first: exact business name, phone, WhatsApp number
 | `name` | Business name exactly as on their signboard / Google listing |
 | `tagline` | One short line shown under the name |
 | `description` | 1–2 sentences for Google results and WhatsApp link previews. Mention the area. |
-| `siteUrl` | Final URL, no trailing slash. Use the `*.pages.dev` URL until a custom domain is set up. |
+| `siteUrl` | Final URL, no trailing slash. Until a custom domain is set up, use the exact `*.pages.dev` address Cloudflare assigns (it may add a suffix like `-6ws`). |
 | `businessType` | `Dentist`, `MedicalClinic`, `Physician`, `Optician`, `Pharmacy`, `EducationalOrganization`, or `LocalBusiness` |
 | `phone` | As it should be displayed, e.g. `+91 98xxx xxxxx` |
 | `whatsapp` | Digits only: `91` + 10-digit mobile, e.g. `9198xxxxxxxx` |
@@ -117,20 +117,24 @@ See below.
 
 The build output is the `out` folder. Pick one method.
 
-### Option A: Git integration (auto-deploys on every push)
+### Option A: Git integration (recommended; auto-deploys on every push)
+
+Works entirely from the Cloudflare dashboard, including on a phone.
 
 1. Push the client's project to its own GitHub or GitLab repository.
-2. In the Cloudflare dashboard, go to **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**.
-3. Authorise GitHub/GitLab if asked, then select the repository and click **Begin setup**.
-4. Set the build settings:
-   - **Project name:** client name (this becomes `project-name.pages.dev`)
+2. In the Cloudflare dashboard, go to **Workers & Pages** → **Create application**.
+3. You land on **Make something new**. This is the Workers flow: don't use **Continue with GitHub** here. Its screen asks for a **Deploy command** (`npx wrangler deploy`), which this template isn't set up for.
+4. Scroll to the bottom and tap **Continue to Pages** (next to "Need to use the legacy Pages workflow?"). Pages is labelled legacy but is fully supported and is the right fit for a static site.
+5. Choose **Import an existing Git repository**, authorise GitHub/GitLab if asked, select the repository, and click **Begin setup**.
+6. Set the build settings. The right screen has a **Build output directory** field.
+   - **Project name:** client name
    - **Production branch:** `main` (or `master`)
    - **Framework preset:** `None`
    - **Build command:** `npm run build`
    - **Build output directory:** `out`
-5. Under **Environment variables (advanced)**, add `NODE_VERSION` = `22` (optional, since `.node-version` already sets it).
-6. Click **Save and Deploy**. The first build takes 1–2 minutes.
-7. Set `siteUrl` in `site.config.ts` to the `https://<project-name>.pages.dev` URL if it differs, then push again.
+7. Click **Save and Deploy**. The first build takes 1–2 minutes. `.node-version` already tells Cloudflare to use Node 22.
+8. **Copy the address Cloudflare shows.** Project names are global, so if the name is taken Cloudflare adds a suffix, e.g. `client-name-6ws.pages.dev` instead of `client-name.pages.dev`.
+9. Set `siteUrl` in `site.config.ts` to exactly that address and push. The site redeploys automatically with correct canonical, Open Graph, sitemap, and JSON-LD URLs.
 
 ### Option B: Direct upload from your machine (no Git needed)
 
@@ -139,7 +143,9 @@ npm run build
 npx wrangler pages deploy out --project-name=client-name
 ```
 
-The first run opens a browser to log in to Cloudflare and asks to create the project. Re-run the same two commands to publish updates.
+The first run opens a Cloudflare login page. You must click **Allow** in a browser **on the same computer**: approving from a phone won't work, because Wrangler waits for the approval on that computer. It then asks to create the project. Re-run the same two commands to publish updates.
+
+A project created by direct upload can't be switched to Git integration later. Choose Option A if you want push-to-deploy.
 
 ### Custom domain
 
