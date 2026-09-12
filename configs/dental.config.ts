@@ -13,6 +13,7 @@ const siteConfig: SiteConfig = {
     "[Placeholder description] One or two sentences for Google results and link previews. Mention the area served.",
   siteUrl: "https://local-biz-template-6ws.pages.dev", // no trailing slash; used for OG, sitemap, JSON-LD
   businessType: "Dentist", // schema.org type: "Dentist" | "MedicalClinic" | "Physician" | "Optician" | "Pharmacy" | "EducationalOrganization" | "LocalBusiness"
+  demo: false, // true = pitch preview: "not the official site" banner, hidden from Google, no JSON-LD. false to go live.
 
   // ── Contact ─────────────────────────────────────────────────
   phone: "+91 00000 00000", // shown as written; tel: link is built from the digits

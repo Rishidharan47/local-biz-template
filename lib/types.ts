@@ -31,6 +31,11 @@ export interface SiteConfig {
   description: string;
   siteUrl: string;
   businessType: BusinessType;
+  /**
+   * Optional. true = private pitch preview: adds a "not the official site" banner,
+   * a noindex tag and an empty sitemap, and drops JSON-LD. Set false to go live.
+   */
+  demo?: boolean;
 
   phone: string;
   whatsapp: string;
@@ -63,6 +68,7 @@ export interface SiteConfig {
 
 /** SiteConfig after validation, with optional fields filled in. */
 export type ResolvedSiteConfig = SiteConfig & {
+  demo: boolean;
   whatsappMessage: string;
   servicesHeading: string;
 };

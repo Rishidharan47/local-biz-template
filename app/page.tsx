@@ -1,3 +1,4 @@
+import DemoBanner from "@/components/DemoBanner";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -18,6 +19,7 @@ export default function Home() {
       >
         Skip to content
       </a>
+      <DemoBanner />
       <Header />
       <main id="main">
         <Hero />
@@ -27,7 +29,8 @@ export default function Home() {
       </main>
       <Footer />
       <WhatsAppButton />
-      <JsonLd data={buildLocalBusinessJsonLd(site)} />
+      {/* No structured data in demo mode: the site isn't the business's own yet */}
+      {!site.demo && <JsonLd data={buildLocalBusinessJsonLd(site)} />}
     </>
   );
 }
