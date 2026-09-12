@@ -1,0 +1,68 @@
+export type DayCode = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+
+/** schema.org type used in the JSON-LD. Pick the most specific one that fits. */
+export type BusinessType =
+  | "LocalBusiness"
+  | "MedicalClinic"
+  | "Dentist"
+  | "Physician"
+  | "Optician"
+  | "Pharmacy"
+  | "EducationalOrganization";
+
+export interface OpeningHours {
+  days: DayCode[];
+  /** 24h "HH:MM" */
+  opens: string;
+  /** 24h "HH:MM", later than `opens` */
+  closes: string;
+}
+
+export interface Review {
+  author: string;
+  text: string;
+  /** Whole number, 1–5 */
+  rating: number;
+}
+
+export interface SiteConfig {
+  name: string;
+  tagline: string;
+  description: string;
+  siteUrl: string;
+  businessType: BusinessType;
+
+  phone: string;
+  whatsapp: string;
+  /** Optional. `{name}` is replaced with the business name. */
+  whatsappMessage?: string;
+
+  address: {
+    street: string;
+    locality: string;
+    region: string;
+    postalCode: string;
+    country: string;
+  };
+  mapsEmbedUrl: string;
+  hours: OpeningHours[];
+
+  /** Optional. Heading and nav label for the services section. Defaults to "Services". */
+  servicesHeading?: string;
+  services: string[];
+  reviews: Review[];
+
+  images: {
+    hero: string;
+    heroAlt: string;
+    ogImage: string;
+  };
+
+  colors: { primary: string };
+}
+
+/** SiteConfig after validation, with optional fields filled in. */
+export type ResolvedSiteConfig = SiteConfig & {
+  whatsappMessage: string;
+  servicesHeading: string;
+};

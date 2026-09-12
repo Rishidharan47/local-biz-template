@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/*
+ * Brand colours are not defined here. app/layout.tsx sets the --brand-*
+ * variables on <html> from site.config.ts (derived in lib/color.ts).
+ */
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-contrast: var(--brand-contrast);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-tint: var(--brand-tint);
+  --color-brand-ink: var(--brand-ink);
+}
+
+@theme {
+  /* WhatsApp's dark teal, same for every client. A white icon on it meets 3:1. */
+  --color-whatsapp: #128c7e;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    /* Keeps anchor targets clear of the sticky header */
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-white text-gray-900 antialiased;
+  }
+
+  /* Set --focus-ring on dark sections to keep the outline visible. */
+  :focus-visible {
+    outline: 3px solid var(--focus-ring, var(--brand-ink));
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@layer components {
+  .wrap {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+  }
+
+  .btn {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-2 text-center text-base font-semibold transition-colors motion-reduce:transition-none;
+  }
+
+  .btn-primary {
+    @apply bg-brand text-brand-contrast hover:bg-brand-hover;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-brand-ink bg-white text-brand-ink hover:bg-brand-tint;
+  }
+
+  .nav-link {
+    @apply inline-flex min-h-11 items-center rounded-md px-3 font-medium whitespace-nowrap text-gray-700 hover:bg-brand-tint hover:text-brand-ink;
+  }
+}
