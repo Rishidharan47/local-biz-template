@@ -83,8 +83,15 @@ export interface SiteConfig {
   reviews: Review[];
 
   images: {
+    /** Hero photo. Desktop: fills the right side behind a curved edge. Phones: below the text. */
     hero: string;
     heroAlt: string;
+    /** Optional. Which part of the photo stays in view where it's cropped, as CSS "x% y%". Defaults to centre. */
+    heroFocus?: string;
+    /** Optional. Different photo for phones (below 768px). */
+    heroMobile?: string;
+    /** Optional. Which part of the phone photo stays in view, "x% y%". Defaults to `heroFocus`. */
+    heroMobileFocus?: string;
     ogImage: string;
   };
 

@@ -56,6 +56,13 @@ function validate(config: SiteConfig): ResolvedSiteConfig {
   requireText("images.heroAlt", config.images.heroAlt);
   requireLocalPath("images.hero", config.images.hero);
   requireLocalPath("images.ogImage", config.images.ogImage);
+  for (const key of ["heroFocus", "heroMobileFocus"] as const) {
+    const value = config.images[key];
+    if (value !== undefined && !/^\d{1,3}% \d{1,3}%$/.test(value)) {
+      fail(`"images.${key}" must look like "50% 30%" (got "${value}").`);
+    }
+  }
+  if (config.images.heroMobile !== undefined) requireLocalPath("images.heroMobile", config.images.heroMobile);
   if (config.logo !== undefined) requireLocalPath("logo", config.logo);
 
   if (config.notice) requireText("notice.text", config.notice.text);

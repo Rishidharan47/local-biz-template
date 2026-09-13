@@ -101,7 +101,7 @@ Collect these from the client first: exact business name, phone, WhatsApp number
 | `servicesSubheading` | Optional. Short line beside the services heading |
 | `services` | Plain names only. Each card's icon is picked automatically from the words. |
 | `reviews` | Real reviews only, with permission. `[]` hides the section. |
-| `images` | Paths to files in `/public`. `images.hero` sits behind the hero headline under a dark gradient. |
+| `images` | Paths to files in `/public`. On desktop `images.hero` fills the right side behind a curved edge; on phones it sits below the text. A wave leads into the next section. Optional: `heroFocus` (`"x% y%"`, which part of the photo stays in view where it's cropped), and `heroMobile` and `heroMobileFocus` (a different photo and crop for phones). |
 | `logo` | Optional. Square logo in `/public`; without it a simple round mark is shown |
 | `notice` | Optional. `{ text, aside }` for the thin strip above the header; `aside` shows on wider screens |
 | `hero` | Optional. `{ eyebrow, headline, highlights }`: small line above the headline, headline lines (the last one uses the accent colour), and up to 3 short highlights with auto-picked icons |

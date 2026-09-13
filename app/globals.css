@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Short windows (e.g. 1366×768 laptops): tightens the hero so it fits on screen */
+@custom-variant short (@media (max-height: 720px));
+
 /*
  * Brand colours are not defined here. app/layout.tsx sets the --brand-* and
  * --accent variables on <html> from site.config.ts (derived in lib/color.ts).
