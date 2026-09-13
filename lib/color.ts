@@ -43,6 +43,17 @@ function mix(from: RGB, to: RGB, amount: number): RGB {
   return from.map((v, i) => v + (to[i] - v) * amount) as RGB;
 }
 
+/** Blend `color` towards `target` from `start` in 5% steps until it reaches AA against `against`. */
+function shiftUntilReadable(color: RGB, target: RGB, against: RGB, start = 0): RGB {
+  let amount = start;
+  let out = mix(color, target, amount);
+  while (contrastRatio(out, against) < AA && amount < 1) {
+    amount = Math.min(1, amount + 0.05);
+    out = mix(color, target, amount);
+  }
+  return out;
+}
+
 export interface Theme {
   /** Backgrounds: buttons, accents */
   brand: string;
@@ -54,13 +65,19 @@ export interface Theme {
   brandTint: string;
   /** Brand-coloured text/borders on white or tint, darkened if needed for AA */
   brandInk: string;
+  /** Dark section background (hero overlay, feature card, footer); white text passes AA */
+  brandDark: string;
+  /** Deeper end of dark gradients */
+  brandDarker: string;
+  /** Highlight text on dark sections; passes AA against `brandDark` */
+  accent: string;
 }
 
 /**
- * Derives every brand colour from one hex so that any primary a client picks
- * still meets WCAG AA (4.5:1) wherever it is used.
+ * Derives every brand colour from one hex (plus an optional accent) so that any
+ * colour a client picks still meets WCAG AA (4.5:1) wherever it is used.
  */
-export function buildTheme(primary: string): Theme {
+export function buildTheme(primary: string, accentHex?: string): Theme {
   const brand = parseHex(primary);
   if (!brand) throw new Error(`Invalid colour "${primary}"`);
 
@@ -74,10 +91,14 @@ export function buildTheme(primary: string): Theme {
   const tint = mix(brand, WHITE, 0.92);
 
   // Check against the tint (darker than white), so it passes on both.
-  let ink = brand;
-  for (let step = 1; contrastRatio(ink, tint) < AA && step <= 20; step++) {
-    ink = mix(brand, BLACK, step * 0.05);
-  }
+  const ink = shiftUntilReadable(brand, BLACK, tint);
+
+  // Dark sections start well below the brand colour so photos under a gradient stay readable.
+  const dark = shiftUntilReadable(brand, BLACK, WHITE, 0.55);
+  const darker = mix(dark, BLACK, 0.35);
+
+  const accentBase = (accentHex && parseHex(accentHex)) || mix(brand, WHITE, 0.55);
+  const accent = shiftUntilReadable(accentBase, WHITE, dark);
 
   return {
     brand: toHex(brand),
@@ -85,5 +106,8 @@ export function buildTheme(primary: string): Theme {
     brandHover: toHex(hover),
     brandTint: toHex(tint),
     brandInk: toHex(ink),
+    brandDark: toHex(dark),
+    brandDarker: toHex(darker),
+    accent: toHex(accent),
   };
 }
